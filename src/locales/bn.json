@@ -1,0 +1,56 @@
+{
+    "common": {
+        "importConfig": "কনফিগারেশন ইমপোর্ট করুন",
+        "exportConfig": "কনফিগারেশন এক্সপোর্ট করুন",
+        "reset": "রিসেট",
+        "view": "দেখুন",
+        "print": "প্রিন্ট",
+        "save": "সংরক্ষণ",
+        "cancel": "বাতিল",
+        "confirm": "নিশ্চিত করুন"
+    },
+    "message": {
+        "importSuccess": "কনফিগারেশন ফাইল সফলভাবে ইমপোর্ট করা হয়েছে",
+        "parseError": "কনফিগারেশন ফাইল পার্স করতে ব্যর্থ",
+        "parameterError": "প্যারামিটার পার্সিং ব্যর্থ হয়েছে",
+        "confirmReset": "আপনি কি নিশ্চিত যে আপনি রিসেট করতে চান?",
+        "resetWarning": "রিসেট করার পর ডেটা পুনরুদ্ধার করা যাবে না।",
+        "storageIsDisabled": "লোকাল স্টোরেজ অক্ষম",
+        "storageIsDisabledDesc": "আপনার ব্রাউজার লোকাল স্টোরেজ অক্ষম করেছে, যা কিছু ফিচার ঠিকমতো কাজ করতে বাধা দিতে পারে। দয়া করে এটি সক্ষম করতে আপনার ব্রাউজার সেটিংস চেক করুন।"
+    },
+    "widgets": {
+        "basicInfo": "মৌলিক তথ্য",
+        "title": "শিরোনাম",
+        "experience": "অভিজ্ঞতা",
+        "text": "টেক্সট",
+        "image": "ছবি"
+    },
+    "form": {
+        "titleContent": "শিরোনাম বিষয়বস্তু",
+        "enterTitle": "শিরোনাম লিখুন",
+        "avatarUrl": "অবতার ইউআরএল",
+        "enterAvatarUrl": "অবতার ইউআরএল লিখুন",
+        "avatarSize": "অবতারের আকার",
+        "name": "নাম",
+        "enterName": "নাম লিখুন",
+        "position": "পদবী",
+        "enterPosition": "পদবী লিখুন",
+        "contactInfo1": "যোগাযোগের তথ্য (সারি ১)",
+        "contactInfo2": "যোগাযোগের তথ্য (সারি ২)",
+        "contactInfo3": "যোগাযোগের তথ্য (সারি ৩)",
+        "enterLink": "লিঙ্ক ঠিকানা লিখুন",
+        "experienceContent": "অভিজ্ঞতা বিষয়বস্তু",
+        "enterExperience": "অভিজ্ঞতা লিখুন",
+        "timeRange": "সময়সীমা",
+        "enterTimeRange": "সময়সীমা লিখুন",
+        "imageUrl": "ছবির ইউআরএল",
+        "enterImageUrl": "ছবির ইউআরএল লিখুন",
+        "imageSize": "ছবির আকার (শতাংশ)",
+        "borderRadius": "বর্ডার ব্যাসার্ধ",
+        "textContent": "টেক্সট বিষয়বস্তু",
+        "editContent": "বিষয়বস্তু সম্পাদনা করুন",
+        "styleLayout": "স্টাইল লেআউট",
+        "marginTop": "মার্জিন টপ",
+        "marginBottom": "মার্জিন বটম"
+    }
+}

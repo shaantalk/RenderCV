@@ -4,7 +4,7 @@ import { initReactI18next } from 'react-i18next'
 import { storageService } from '@/services/storage'
 
 import en from './en.json'
-import zh from './zh.json'
+import bn from './bn.json'
 
 i18n
   .use(initReactI18next)
@@ -13,14 +13,14 @@ i18n
       en: {
         translation: en,
       },
-      zh: {
-        translation: zh,
+      bn: {
+        translation: bn,
       },
     },
     lng: (function () {
       const storageValue = storageService.getLanguage()
-      if (storageValue === 'en' || storageValue === 'zh') return storageValue
-      return navigator.language?.startsWith('zh-') ? 'zh' : 'en'
+      if (storageValue === 'en' || storageValue === 'bn') return storageValue
+      return navigator.language?.startsWith('bn-') ? 'bn' : 'en'
     })(),
     fallbackLng: 'en',
     interpolation: {
@@ -31,7 +31,7 @@ i18n
     applyLanguageToDocument(i18n.language)
   })
 
-export function setLanguage(lang: 'en' | 'zh') {
+export function setLanguage(lang: 'en' | 'bn') {
   i18n.changeLanguage(lang).then(() => {
     applyLanguageToDocument(lang)
     storageService.setLanguage(lang)
@@ -39,15 +39,15 @@ export function setLanguage(lang: 'en' | 'zh') {
 }
 
 function applyLanguageToDocument(lang: string) {
-  if (lang === 'zh') {
-    document.documentElement.lang = 'zh-CN'
-    document.title = '在线简历生成工具'
+  if (lang === 'bn') {
+    document.documentElement.lang = 'bn-BD'
+    document.title = 'অনলাইন জীবনবৃত্তান্ত নির্মাতা'
   } else {
     document.documentElement.lang = 'en-US'
     document.title = 'Resume Builder'
   }
 }
 
-export function isChineseLanguage() {
-  return i18n.language === 'zh'
+export function isBengaliLanguage() {
+  return i18n.language === 'bn'
 }

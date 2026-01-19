@@ -14,9 +14,9 @@ export function EditorPage() {
   useEffect(() => {
     const toastId = !isStorageAvailable()
       ? toast.warning(i18n.t('message.storageIsDisabled'), {
-          description: i18n.t('message.storageIsDisabledDesc'),
-          duration: Infinity,
-        })
+        description: i18n.t('message.storageIsDisabledDesc'),
+        duration: Infinity,
+      })
       : null
     return () => {
       if (toastId) {
@@ -42,10 +42,10 @@ export function EditorPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="en">
-                  <span>🇺🇸</span>English
+                  <span>EN</span>English
                 </SelectItem>
-                <SelectItem value="zh">
-                  <span>🇨🇳</span>中文
+                <SelectItem value="bn">
+                  <span>BN</span>বাংলা
                 </SelectItem>
               </SelectContent>
             </Select>
