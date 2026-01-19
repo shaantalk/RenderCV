@@ -50,7 +50,7 @@ export function PanelDnd() {
   }
 
   return (
-    <ul className="widgets-container scroll-thin relative basis-[900px] overflow-auto rounded-2xl border">
+    <ul className="light widgets-container scroll-thin relative basis-[900px] overflow-auto rounded-2xl border">
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}

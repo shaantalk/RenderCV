@@ -61,9 +61,9 @@ export function ViewPage() {
   }
 
   return (
-    <div className="bg-zinc-50 lg:min-h-[100vh] lg:py-8">
+    <div className="bg-background lg:min-h-[100vh] lg:py-8">
       <div className="mx-auto overflow-hidden lg:w-[860px] lg:rounded-2xl lg:shadow-2xl print:w-[900px]">
-        <ul className="widgets-container">
+        <ul className="light widgets-container">
           {widgets.map(item => (
             <li
               key={item.id}

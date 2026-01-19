@@ -64,7 +64,7 @@ export function PrintPage() {
 
   return (
     <div className="mx-auto w-[900px]">
-      <ul className="widgets-container">
+      <ul className="light widgets-container">
         {widgets.map(item => (
           <li
             key={item.id}

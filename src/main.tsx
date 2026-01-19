@@ -7,6 +7,7 @@ import { ErrorBoundary } from '@/components/layout/error-boundary'
 import { router } from '@/routes/index'
 
 import '@/bootstrap'
+import { ThemeProvider } from '@/components/providers/theme-provider'
 
 const container = document.getElementById('root')!
 const root = createRoot(
@@ -25,7 +26,14 @@ const root = createRoot(
 root.render(
   <StrictMode>
     <ErrorBoundary>
-      <RouterProvider router={router} />
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <RouterProvider router={router} />
+      </ThemeProvider>
     </ErrorBoundary>
   </StrictMode>,
 )

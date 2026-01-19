@@ -1,6 +1,10 @@
 import i18n from 'i18next'
+import { useTheme } from 'next-themes'
+import { Moon, Sun } from 'lucide-react'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
+
+import { Button } from '#ui/button'
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '#ui/select'
 import { isStorageAvailable } from '@/lib/storage'
@@ -11,6 +15,7 @@ import { PanelDnd } from '@/routes/editor/sections/panel-dnd'
 import { PanelMaterials } from '@/routes/editor/sections/panel-materials'
 
 export function EditorPage() {
+  const { setTheme, theme } = useTheme()
   useEffect(() => {
     const toastId = !isStorageAvailable()
       ? toast.warning(i18n.t('message.storageIsDisabled'), {
@@ -32,7 +37,17 @@ export function EditorPage() {
         {/* left materials panel */}
         <div className="scroll-thin flex h-full w-[200px] shrink-0 flex-col justify-between overflow-y-auto border-r">
           <PanelMaterials />
-          <div className="p-4">
+          <div className="flex gap-2 p-4">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              title={i18n.t('theme')}
+            >
+              <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              <span className="sr-only">Toggle theme</span>
+            </Button>
             <Select
               onValueChange={setLanguage}
               defaultValue={i18n.language}
@@ -52,7 +67,7 @@ export function EditorPage() {
           </div>
         </div>
         {/* center dnd panel */}
-        <div className="flex grow justify-center bg-zinc-50 p-4">
+        <div className="flex grow justify-center bg-muted/30 p-4">
           <PanelDnd />
         </div>
         {/* right config panel */}
