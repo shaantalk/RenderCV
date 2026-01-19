@@ -1,6 +1,6 @@
 import React from 'react';
 import type { ResumeData, ResumeSection, ResumeItem } from '../../types/resume';
-import { Plus, Trash2, FileText } from 'lucide-react';
+import { Plus, Trash2, FileText, Briefcase, GraduationCap, Code, Award } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import RichTextField from './RichTextField';
 
@@ -17,11 +17,26 @@ const Editor: React.FC<EditorProps> = ({ data, onChange }) => {
         });
     };
 
-    const addSection = () => {
+    const handleLinkChange = (id: string, field: 'label' | 'url', value: string) => {
+        const newLinks = data.details.links.map(l => l.id === id ? { ...l, [field]: value } : l);
+        onChange({ ...data, details: { ...data.details, links: newLinks } });
+    };
+
+    const addLink = () => {
+        const newLink = { id: uuidv4(), label: 'Link', url: '' };
+        onChange({ ...data, details: { ...data.details, links: [...data.details.links, newLink] } });
+    };
+
+    const removeLink = (id: string) => {
+        const newLinks = data.details.links.filter(l => l.id !== id);
+        onChange({ ...data, details: { ...data.details, links: newLinks } });
+    };
+
+    const addSection = (type: ResumeSection['type'] = 'custom', title: string = 'New Section') => {
         const newSection: ResumeSection = {
             id: uuidv4(),
-            title: 'New Section',
-            type: 'custom',
+            title,
+            type,
             items: [],
         };
         onChange({
@@ -51,7 +66,7 @@ const Editor: React.FC<EditorProps> = ({ data, onChange }) => {
         const newItem: ResumeItem = {
             id: uuidv4(),
             title: 'Title',
-            description: '<p>Description...</p>',
+            description: '<ul><li>Key achievement...</li></ul>',
         };
 
         updateSection(sectionId, {
@@ -115,6 +130,18 @@ const Editor: React.FC<EditorProps> = ({ data, onChange }) => {
                         />
                     </div>
                 </div>
+
+                <h4>Links</h4>
+                {data.details.links.map(link => (
+                    <div key={link.id} className="form-grid" style={{ marginBottom: 10 }}>
+                        <input type="text" value={link.label} onChange={(e) => handleLinkChange(link.id, 'label', e.target.value)} placeholder="Label (e.g. LinkedIn)" />
+                        <div style={{ display: 'flex', gap: 5 }}>
+                            <input type="text" value={link.url} onChange={(e) => handleLinkChange(link.id, 'url', e.target.value)} placeholder="URL" style={{ flex: 1 }} />
+                            <button onClick={() => removeLink(link.id)} className="btn-icon danger"><Trash2 size={16} /></button>
+                        </div>
+                    </div>
+                ))}
+                <button onClick={addLink} className="btn primary outline sm"><Plus size={14} /> Add Link</button>
             </div>
 
             <div className="sections-list">
@@ -195,9 +222,46 @@ const Editor: React.FC<EditorProps> = ({ data, onChange }) => {
                 ))}
             </div>
 
-            <button onClick={addSection} className="btn primary full-width add-section-btn">
-                <Plus size={18} /> Add New Section
-            </button>
+            <div className="add-blocks-container">
+                <h4>Add Building Blocks</h4>
+                <div className="blocks-grid">
+                    <button onClick={() => addSection('experience', 'Work Experience')} className="btn primary">
+                        <Briefcase size={16} /> Work Experience
+                    </button>
+                    <button onClick={() => addSection('education', 'Education')} className="btn primary">
+                        <GraduationCap size={16} /> Education
+                    </button>
+                    <button onClick={() => addSection('custom', 'Skills')} className="btn primary">
+                        <Code size={16} /> Skills
+                    </button>
+                    <button onClick={() => addSection('custom', 'Certifications')} className="btn primary">
+                        <Award size={16} /> Certifications
+                    </button>
+                    <button onClick={() => addSection('custom', 'Custom Section')} className="btn secondary">
+                        <Plus size={16} /> Custom
+                    </button>
+                </div>
+            </div>
+
+            <style>{`
+            .add-blocks-container {
+                margin-top: 30px;
+                padding: 20px;
+                background: #2a2a2a;
+                border-radius: 8px;
+                border: 1px solid #333;
+            }
+            .add-blocks-container h4 {
+                margin-top: 0;
+                margin-bottom: 15px;
+            }
+            .blocks-grid {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+        `}</style>
+
         </div>
     );
 };

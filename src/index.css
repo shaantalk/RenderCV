@@ -21,10 +21,69 @@ body {
 }
 
 /* App Layout */
-.app-container {
+.app-main {
   display: flex;
+  flex-direction: column;
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
+}
+
+.toolbar {
+  height: 60px;
+  background-color: #1a1a1a;
+  border-bottom: 1px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  color: white;
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.app-title {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #007bff;
+}
+
+.filename-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #555;
+  color: white;
+  padding: 5px;
+  outline: none;
+}
+
+.filename-input:focus {
+  border-bottom-color: #007bff;
+}
+
+.upload-btn {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.btn.secondary {
+  background-color: #444;
+  color: white;
+}
+
+.btn.secondary:hover {
+  background-color: #555;
+}
+
+
+.app-container {
+  display: flex;
+  flex: 1;
   overflow: hidden;
 }
 

@@ -27,11 +27,19 @@ export type ResumeSection = {
 };
 
 export type ResumeData = {
+  templateId: string;
+  meta: {
+    fileName: string;
+  };
   details: ResumeDetails;
   sections: ResumeSection[];
 };
 
 export const INITIAL_RESUME: ResumeData = {
+  templateId: 'standard',
+  meta: {
+    fileName: 'resume',
+  },
   details: {
     name: 'John Doe',
     email: 'john@example.com',

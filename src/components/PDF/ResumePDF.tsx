@@ -2,56 +2,68 @@ import React from 'react';
 import { Page, Text, View, Document, StyleSheet, Link, Font } from '@react-pdf/renderer';
 import type { ResumeData } from '../../types/resume';
 
-// Register a standard font
 Font.register({
-    family: 'Helvetica',
+    family: 'Roboto',
     fonts: [
-        { src: 'https://fonts.gstatic.com/s/helveticaneue/v70/1Ptsg8zYS_SKggPNyC0IT4ttDfA.ttf' }, // Regular
-        { src: 'https://fonts.gstatic.com/s/helveticaneue/v70/1Ptsg8zYS_SKggPNyC0IT4ttDfA.ttf', fontWeight: 'bold' }, // Fallback for now
+        { src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-regular-webfont.ttf' },
+        { src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-bold-webfont.ttf', fontWeight: 'bold' },
+        { src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-italic-webfont.ttf', fontStyle: 'italic' },
     ],
 });
 
 const styles = StyleSheet.create({
     page: {
         padding: 30,
-        fontFamily: 'Helvetica',
-        fontSize: 11,
-        lineHeight: 1.5,
-        color: '#333',
+        fontFamily: 'Roboto',
+        fontSize: 10,
+        lineHeight: 1.4,
+        color: '#000',
     },
     header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         marginBottom: 20,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
-        borderBottomStyle: 'solid',
-        paddingBottom: 10,
+        paddingBottom: 15,
+    },
+    headerLeft: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+    },
+    headerRight: {
+        flexDirection: 'column',
+        alignItems: 'flex-end',
+        justifyContent: 'center',
     },
     name: {
-        fontSize: 24,
+        fontSize: 28,
         fontWeight: 'bold',
-        marginBottom: 5,
-        textTransform: 'uppercase',
     },
-    contactRow: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        gap: 15,
+    contactItem: {
         fontSize: 10,
-        color: '#666',
+        marginBottom: 2,
+        flexDirection: 'row',
+    },
+    contactLabel: {
+        fontWeight: 'bold',
+        marginRight: 4,
+    },
+    link: {
+        color: '#0056b3',
+        textDecoration: 'none',
     },
     section: {
         marginBottom: 15,
     },
     sectionTitle: {
-        fontSize: 14,
+        fontSize: 12,
         fontWeight: 'bold',
-        borderBottomWidth: 1,
-        borderBottomColor: '#333',
-        borderBottomStyle: 'solid',
+        textTransform: 'uppercase',
+        borderBottomWidth: 1.5,
+        borderBottomColor: '#000',
         marginBottom: 8,
         paddingBottom: 2,
-        marginTop: 5,
-        textTransform: 'uppercase',
     },
     item: {
         marginBottom: 8,
@@ -59,69 +71,101 @@ const styles = StyleSheet.create({
     itemHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: 'flex-end',
         marginBottom: 2,
     },
     itemTitle: {
-        fontWeight: 'bold',
         fontSize: 11,
+        fontWeight: 'bold',
+        color: '#0056b3', // Optional: mimic the blue title from image? User image had blue title
     },
-    itemSubtitle: {
-        fontStyle: 'italic',
+    itemRole: {
+        fontWeight: 'bold',
         fontSize: 10,
     },
     itemDate: {
         fontSize: 10,
-        color: '#666',
+        fontWeight: 'bold',
     },
     richText: {
-        marginTop: 2,
         fontSize: 10,
         textAlign: 'justify',
     },
-    link: {
-        color: '#007bff',
-        textDecoration: 'none',
+    bulletPoint: {
+        width: 10,
+        fontSize: 10,
     },
+    bulletRow: {
+        flexDirection: 'row',
+        marginBottom: 2,
+    }
 });
 
-// Better approach for HTML: specialized parser
+// Robust HTML Renderer for PDF
 const renderHtml = (html: string) => {
-    // Regex to find tokens
-    const tokens = html.split(/(<\/?(?:b|strong|i|em|a|p|ul|li|br)[^>]*>)/g);
+    // We need to handle <ul><li>...</li></ul> significantly better.
+    // Strategy: Split by top-level blocks.
 
+    // 1. Clean up HTML
+    const cleanHtml = html.replace(/\n/g, '').replace(/\r/g, '');
+
+    // 2. Extract list items if present, otherwise treat as paragraph
+    if (cleanHtml.includes('<li>')) {
+        // Regex to extract li contents
+        const liRegex = /<li>(.*?)<\/li>/g;
+        const items = [];
+        let match;
+        while ((match = liRegex.exec(cleanHtml)) !== null) {
+            items.push(match[1]);
+        }
+
+        return (
+            <View>
+                {items.map((itemHtml, i) => (
+                    <View key={i} style={styles.bulletRow}>
+                        <Text style={styles.bulletPoint}>•</Text>
+                        <View style={{ flex: 1 }}>
+                            {parseInlineHtml(itemHtml)}
+                        </View>
+                    </View>
+                ))}
+            </View>
+        );
+    } else {
+        // Just a paragraph
+        return <Text style={styles.richText}>{parseInlineHtml(cleanHtml)}</Text>;
+    }
+};
+
+const parseInlineHtml = (html: string) => {
+    // Handles <b>, <i>, <a>, <br> inline
+    const tokens = html.split(/(<\/?(?:b|strong|i|em|a|br)[^>]*>)/g);
     const elements: React.ReactNode[] = [];
+
     let currentStyle: any = {};
     let currentLink: string | null = null;
 
     tokens.forEach((token, i) => {
         if (token.startsWith('<')) {
-            // Tag
-            if (token === '<b>' || token === '<strong>') {
-                currentStyle = { ...currentStyle, fontWeight: 'bold' };
-            } else if (token === '</b>' || token === '</strong>') {
+            if (token === '<b>' || token === '<strong>') currentStyle = { ...currentStyle, fontWeight: 'bold' };
+            else if (token === '</b>' || token === '</strong>') {
                 const { fontWeight, ...rest } = currentStyle;
                 currentStyle = rest;
-            } else if (token === '<i>' || token === '<em>') {
-                currentStyle = { ...currentStyle, fontStyle: 'italic' };
-            } else if (token === '</i>' || token === '</em>') {
+            }
+            else if (token === '<i>' || token === '<em>') currentStyle = { ...currentStyle, fontStyle: 'italic' };
+            else if (token === '</i>' || token === '</em>') {
                 const { fontStyle, ...rest } = currentStyle;
                 currentStyle = rest;
-            } else if (token.startsWith('<a ')) {
+            }
+            else if (token.startsWith('<a ')) {
                 const match = token.match(/href="([^"]*)"/);
                 if (match) currentLink = match[1];
-            } else if (token === '</a>') {
-                currentLink = null;
-            } else if (token === '<br>' || token === '<br/>') {
-                elements.push(<Text key={i}>{'\n'}</Text>);
-            } else if (token === '<li>') {
-                elements.push(<Text key={i}>{'\n• '}</Text>);
-            } else if (token === '</p>') {
-                elements.push(<Text key={i}>{'\n\n'}</Text>);
             }
+            else if (token === '</a>') currentLink = null;
+            else if (token === '<br>' || token === '<br/>') elements.push(<Text key={i}>{'\n'}</Text>);
         } else {
-            // Text Content
-            // Decode HTML entities if needed (basic ones)
             const text = token
+                .replace(/<[^>]+>/g, '') // remove any stray tags
                 .replace(/&nbsp;/g, ' ')
                 .replace(/&amp;/g, '&')
                 .replace(/&lt;/g, '<')
@@ -129,24 +173,16 @@ const renderHtml = (html: string) => {
 
             if (text) {
                 if (currentLink) {
-                    elements.push(
-                        <Link key={i} src={currentLink} style={{ ...currentStyle, ...styles.link }}>
-                            {text}
-                        </Link>
-                    );
+                    elements.push(<Link key={i} src={currentLink} style={{ ...currentStyle, ...styles.link }}>{text}</Link>);
                 } else {
-                    elements.push(
-                        <Text key={i} style={currentStyle}>
-                            {text}
-                        </Text>
-                    );
+                    elements.push(<Text key={i} style={currentStyle}>{text}</Text>);
                 }
             }
         }
     });
 
-    return <Text style={styles.richText}>{elements}</Text>;
-};
+    return <Text>{elements}</Text>;
+}
 
 
 const ResumePDF: React.FC<{ data: ResumeData }> = ({ data }) => {
@@ -154,12 +190,17 @@ const ResumePDF: React.FC<{ data: ResumeData }> = ({ data }) => {
         <Document>
             <Page size="A4" style={styles.page}>
                 <View style={styles.header}>
-                    <Text style={styles.name}>{data.details.name}</Text>
-                    <View style={styles.contactRow}>
-                        <Text>{data.details.email}</Text>
-                        <Text>{data.details.phone}</Text>
-                        {data.details.links.map((link) => (
-                            <Link key={link.id} src={link.url} style={styles.link}>{link.label}</Link>
+                    <View style={styles.headerLeft}>
+                        <Text style={styles.name}>{data.details.name}</Text>
+                    </View>
+                    <View style={styles.headerRight}>
+                        <Text style={styles.contactItem}><Text style={styles.contactLabel}>Phone: </Text>{data.details.phone}</Text>
+                        <Text style={styles.contactItem}><Text style={styles.contactLabel}>Email: </Text>{data.details.email}</Text>
+                        {data.details.links.map(link => (
+                            <Text key={link.id} style={styles.contactItem}>
+                                <Text style={styles.contactLabel}>{link.label}: </Text>
+                                <Link src={link.url} style={styles.link}>{link.url.replace(/^https?:\/\//, '')}</Link>
+                            </Text>
                         ))}
                     </View>
                 </View>
@@ -169,13 +210,26 @@ const ResumePDF: React.FC<{ data: ResumeData }> = ({ data }) => {
                         <Text style={styles.sectionTitle}>{section.title}</Text>
                         {section.items.map((item) => (
                             <View key={item.id} style={styles.item}>
-                                <View style={styles.itemHeader}>
-                                    <Text style={styles.itemTitle}>{item.title}</Text>
-                                    <Text style={styles.itemDate}>{item.date}</Text>
-                                </View>
-                                {item.subtitle && (
-                                    <Text style={styles.itemSubtitle}>{item.subtitle}</Text>
+                                {/* Specific Layout for Jobs: Company Left, Date Right. Role below company. */}
+                                {(section.type === 'experience' || section.type === 'education') ? (
+                                    <>
+                                        <View style={styles.itemHeader}>
+                                            <Text style={styles.itemTitle}>{item.title}</Text>
+                                            <Text style={styles.itemRole}>{item.subtitle}</Text>
+                                            <Text style={styles.itemDate}>{item.date}</Text>
+                                        </View>
+                                        {/* If it's a multi-line role/school description, it goes here */}
+                                        {renderHtml(item.description)}
+                                    </>
+                                ) : (
+                                    /* Default layout for other sections */
+                                    <View style={styles.itemHeader}>
+                                        <Text style={styles.itemTitle}>{item.title}</Text>
+                                        <Text style={styles.itemRole}>{item.subtitle}</Text>
+                                        <Text style={styles.itemDate}>{item.date}</Text>
+                                    </View>
                                 )}
+
                                 {renderHtml(item.description)}
                             </View>
                         ))}
