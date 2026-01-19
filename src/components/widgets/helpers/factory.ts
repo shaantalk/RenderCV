@@ -13,7 +13,7 @@ export function createDefaultWidgets(): IWidgetNode[] {
       id: generateWidgetId(),
       data: {
         propsData: {
-          avatarUrl: '/avatar.jpg',
+          avatarUrl: `${import.meta.env.BASE_URL}avatar.jpg`,
           avatarSize: 86,
           avatarRound: true,
           name: isChinese ? 'Santanu Panda' : 'Santanu Panda',
@@ -120,7 +120,7 @@ export function createWidgetNode(type: WidgetType): IWidgetNode {
         id,
         data: {
           propsData: {
-            avatarUrl: '/avatar.jpg',
+            avatarUrl: `${import.meta.env.BASE_URL}avatar.jpg`,
             avatarSize: 86,
             avatarRound: true,
             name: isChinese ? 'Santanu Panda' : 'Santanu Panda',
@@ -210,7 +210,7 @@ export function createWidgetNode(type: WidgetType): IWidgetNode {
         id,
         data: {
           propsData: {
-            url: '/image.png',
+            url: `${import.meta.env.BASE_URL}image.png`,
             imageSize: 100,
             borderRadius: 0,
           },

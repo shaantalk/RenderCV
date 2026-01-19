@@ -10,6 +10,7 @@ const env = loadEnv(process.env.NODE_ENV!, process.cwd(), '')
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/RenderCV/',
   define: {
     __DATE__: JSON.stringify(new Date().toISOString().slice(0, 10)),
   },

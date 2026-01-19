@@ -1,6 +1,4 @@
 import * as Sentry from '@sentry/react'
-import { Analytics } from '@vercel/analytics/react'
-import { SpeedInsights } from '@vercel/speed-insights/react'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { RouterProvider } from 'react-router'
@@ -28,8 +26,6 @@ root.render(
   <StrictMode>
     <ErrorBoundary>
       <RouterProvider router={router} />
-      <Analytics />
-      <SpeedInsights sampleRate={0.2} />
     </ErrorBoundary>
   </StrictMode>,
 )

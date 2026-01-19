@@ -1,4 +1,4 @@
-import { Navigate, createBrowserRouter } from 'react-router'
+import { Navigate, createHashRouter } from 'react-router'
 
 import { RootLayout } from '@/routes/layouts/root-layout'
 import { EditorPage } from '@/routes/editor/page'
@@ -6,7 +6,7 @@ import { ViewPage } from '@/routes/view/page'
 import { PrintPage } from '@/routes/print/page'
 import { NotFoundPage } from '@/routes/not-found/page'
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   {
     path: '/',
     element: <RootLayout />,
