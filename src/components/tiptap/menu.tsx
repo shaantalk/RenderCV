@@ -25,12 +25,23 @@ export function TiptapMenu({ editor }: TiptapMenuProps) {
     if (previousUrl) setLinkContent(previousUrl)
   }
   const handleSaveLink = () => {
-    const href = linkContent.trim()
+    let href = linkContent.trim()
     if (!href) {
       editor.chain().focus().extendMarkRange('link').unsetLink().run()
       return
     }
-    editor.chain().focus().extendMarkRange('link').setLink({ href }).run()
+
+    // auto prepend https://
+    if (!/^https?:\/\//i.test(href) && !/^mailto:/i.test(href)) {
+      href = 'https://' + href
+    }
+
+    editor
+      .chain()
+      .focus()
+      .extendMarkRange('link')
+      .setLink({ href, target: '_blank', rel: 'noopener noreferrer' })
+      .run()
   }
 
   return (

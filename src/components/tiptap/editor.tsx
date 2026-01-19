@@ -8,7 +8,16 @@ import { TiptapMenu } from '#tiptap/menu'
 
 import '#tiptap/tiptap.css'
 
-const extensions = [StarterKit, Link]
+const extensions = [
+  StarterKit,
+  Link.configure({
+    openOnClick: false,
+    HTMLAttributes: {
+      target: '_blank',
+      rel: 'noopener noreferrer',
+    },
+  }),
+]
 
 export type TiptapRef = Ref<{
   getHTML: () => string
